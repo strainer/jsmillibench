@@ -1,0 +1,88 @@
+
+Testing: warmup benchmarks
+  Code: Math.sqrt(i)
+   squareroot 0.3394 Mtest/s   avg : 3466.161300781456
+   squareroot 0.3414 Mtest/s   avg : 3466.161300781402
+   squareroot 0.3397 Mtest/s   avg : 3466.1613007814194
+  Code: r+=i
+   fastest dummy test 1.7535 Mtest/s   avg : 45002.5
+   fastest dummy test 1.7593 Mtest/s   avg : 45002.5
+   fastest dummy test 1.7742 Mtest/s   avg : 45002.5
+
+Testing: bool or 01 clause
+  Code: if(getasBool(rbulk,i))
+   clause on bool 3.5829 Mtest/s   avg : 25
+   clause on bool 3.6288 Mtest/s   avg : 25
+   clause on bool 3.5949 Mtest/s   avg : 25
+  Code: if(getasNumb(rbulk,i))
+   clause on 0 or 1 3.6148 Mtest/s   avg : 25
+   clause on 0 or 1 3.6215 Mtest/s   avg : 25
+   clause on 0 or 1 3.5640 Mtest/s   avg : 25
+
+Testing: result passing
+  Code: r.x + r.y + r.z
+   transient return Object 6.7495 Mtest/s   avg : 11765.719950329636
+   transient return Object 6.6523 Mtest/s   avg : 11765.719950302988
+   transient return Object 6.7559 Mtest/s   avg : 11765.719950213539
+  Code: _rb.x + _rb.y + _rb.z
+   dedicated return Object 4.8724 Mtest/s   avg : 11765.719950577191
+   dedicated return Object 4.9245 Mtest/s   avg : 11765.71995050671
+   dedicated return Object 4.8551 Mtest/s   avg : 11765.719950539828
+  Code: r[0] + r[1] + r[2]
+   transient return Array 1.3993 Mtest/s   avg : 11765.719949770295
+   transient return Array 1.3690 Mtest/s   avg : 11765.719949768723
+   transient return Array 1.3949 Mtest/s   avg : 11765.719949766693
+  Code: _r[0] + _r[1] + _r[2]
+   dedicated return Array 4.5631 Mtest/s   avg : 11765.719950472007
+   dedicated return Array 4.5845 Mtest/s   avg : 11765.719950497121
+   dedicated return Array 4.5699 Mtest/s   avg : 11765.719950470982
+  Code: ret= func(params,ret)
+   hot passed return Array 1.8221 Mtest/s   avg : 11765.719949759712
+   hot passed return Array 1.8537 Mtest/s   avg : 11765.71994975817
+   hot passed return Array 1.7785 Mtest/s   avg : 11765.719949759008
+  Code: ret= func(params,ret)
+   hot passed return Object 1.6406 Mtest/s   avg : 11765.719949760685
+   hot passed return Object 1.6232 Mtest/s   avg : 11765.71994976
+   hot passed return Object 1.6391 Mtest/s   avg : 11765.719949761387
+
+Testing: modulus functions
+  Code: Math.floor(i)
+   Math.floor 1.2533 Mtest/s   avg : 44852
+   Math.floor 1.2718 Mtest/s   avg : 44852
+   Math.floor 1.2655 Mtest/s   avg : 44852
+  Code: a % b
+   std modulus 0.0584 Mtest/s   avg : 1049
+   std modulus 0.0579 Mtest/s   avg : 1049
+   std modulus 0.0585 Mtest/s   avg : 1049
+  Code: castulp ~ a/=b ; a=a-Math.floor(a)
+   spec. modulus 0.3426 Mtest/s   avg : 1049
+   spec. modulus 0.3405 Mtest/s   avg : 1049
+   spec. modulus 0.3417 Mtest/s   avg : 1049
+  Code: a-Math.round(a/b)*b
+   spec. modulus creates neg 0.3749 Mtest/s   avg : -148
+   spec. modulus creates neg 0.3764 Mtest/s   avg : -148
+   spec. modulus creates neg 0.3886 Mtest/s   avg : -148
+  Code: a-Math.floor(a/b + 0.5 )*b
+   spec. modulus creates neg 0.3610 Mtest/s   avg : -148
+   spec. modulus creates neg 0.3617 Mtest/s   avg : -148
+   spec. modulus creates neg 0.3625 Mtest/s   avg : -148
+
+Testing: divide by two
+  Code: Math.floor(i*0.5)
+   div by 2 and round 0.8463 Mtest/s   avg : 22352.5
+   div by 2 and round 0.8646 Mtest/s   avg : 22352.5
+   div by 2 and round 0.8565 Mtest/s   avg : 22352.5
+  Code: i>>>1
+   div by 2 and round 1.0922 Mtest/s   avg : 22352.5
+   div by 2 and round 1.0928 Mtest/s   avg : 22352.5
+   div by 2 and round 1.0765 Mtest/s   avg : 22352.5
+
+Testing: array clone
+  Code: array.slice()
+   clone array 0.0294 Mtest/s   avg : NaN
+   clone array 0.0282 Mtest/s   avg : NaN
+   clone array 0.0281 Mtest/s   avg : NaN
+  Code: for(i... (copy)
+   clone array 0.0232 Mtest/s   avg : NaN
+   clone array 0.0195 Mtest/s   avg : NaN
+   clone array 0.0199 Mtest/s   avg : NaN
