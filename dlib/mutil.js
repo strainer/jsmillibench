@@ -53,7 +53,7 @@ bench = function (mthd, bentime, mthd_legend, mthd_arg) {
   var roughtmrep=ctm/treps
   var duereps=Math.floor(bentime/roughtmrep)
   if(duereps<2){ 
-    console.log(mthd_legend+" "+(treps/ctm).toFixed(4)+" test/s "+
+    console.log(mthd_legend+" "+(treps/ctm).toFixed(4)+" func/s "+
       "  avg : "+tallyret/tallyfrq)
     return
   }
@@ -114,7 +114,7 @@ bench = function (mthd, bentime, mthd_legend, mthd_arg) {
     ops=(rms/1000).toFixed(4)
   }
   
-  console.log(mthd_legend+" "+ops+" Mtest/s "+
+  console.log(mthd_legend+" "+ops+" Mfunc/s "+
     "  avg : "+tallyret/tallyfrq)
 
 }
