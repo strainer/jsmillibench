@@ -18,6 +18,7 @@ function proclast(last){
   return ((b[0]*1000) + (b[1]/1000000))
 }
 
+conlog=console.log.bind( console )
 
 bench = function (mthd, bentime, mthd_legend, mthd_arg) {
     
@@ -244,3 +245,27 @@ regurg= function(A)
   if(As!=null&&Ai==As.length){ Ai=0; }
   return As[Ai++]
 }
+
+
+sstats = function(A,s,e){
+
+  s=s||0; e=e||A.length
+  
+  var nn=0    ,delta=0, deltb=0 
+     ,mean=0  ,mean2=0, qvl=0
+     ,lw=A[s] ,hi=A[s]
+  
+  while(s<e){
+    qvl=A[s++],nn++
+    if(lw>qvl) lw=qvl	
+    if(hi<qvl) hi=qvl	
+    delta = qvl - mean
+    mean += delta/nn
+    deltb = qvl - mean
+    mean2+= delta*deltb //welfords alg	
+  }
+  
+  return { lw:lw ,hi:hi ,mean:mean ,sdev:Math.sqrt( mean2/(nn-1) ) }
+
+}
+
