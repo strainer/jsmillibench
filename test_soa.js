@@ -81,6 +81,14 @@ function access_aos(c){
   return aos[c].a+aos[c].b+aos[c].c+aos[c].d+aos[c].e+aos[c].f
 }
 
+function access1_soa(c){
+  return soa[3][c]	
+}
+
+function access1_aos(c){
+  return aos[c].d
+}
+
 
 
 var zztestres
@@ -130,6 +138,35 @@ var soaaos = [
     //~ console.log(r) 
   }
 }
+,
+{
+ desc:"soa "
+,code:"soa 1"
+,func:function()
+  { var r=0;
+    for(var i=0,n=cans.length;i<n;i++){
+      r+=access1_soa(cans[i]) 
+    }
+    
+    return r
+    //~ slow()
+    //~ console.log(r)
+  }
+}
+,
+{
+ desc:"aos "
+,code:"aos 1"
+,func:function()
+  { var r=0;
+    for(var i=0,n=cans.length;i<n;i++){
+      r+=access1_aos(cans[i]) 
+    }
+    return r
+    //~ slow()
+    //~ console.log(r) 
+  }
+}
 
 ]
 
@@ -157,6 +194,12 @@ var testlist=[
  {rc:soaaos   ,ds:"soaaos"} 
  //firefox 50 aos 80% faster than soa
  //v8 2015 aos 40% slower than soa
+ //
+ //firefox must arrange efficient small object unpacking
+ //firefox aos 50% slower than soa when accessing only 1 out 6 feilds
+ //basic array access speeds were same for ff and v8
+ //it appears aos can benefit from reduced array lookups
+ //if feild packing and unpacking is optimised by engine
 ]
 
 var testlenseconds=1

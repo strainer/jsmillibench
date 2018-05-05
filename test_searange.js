@@ -344,11 +344,8 @@ function dotests(testix,tim){
 }
 
 var testlist=[
-
   //~ {rc:warmup     ,ds:"warmup benchmarks"} ,
  {rc:binsearch   ,ds:"binsearch"}
-
 ]
-
 var testlenseconds=1
 dotests(testlist, testlenseconds )

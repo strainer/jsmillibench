@@ -4,8 +4,7 @@ if(typeof window ==='undefined'){
   //~ require ('O:/hub/lead/trigfills/dlib/mutil.js')
   Fdrandom=require ('./dlib/Fdrandom.js')
 }
- 
- 
+
 var warmup = [
 
 {
@@ -231,7 +230,7 @@ function getasPassObj(rbulk,i,r){
   r.x=rbulk[i] ,r.y=rbulk[0]+rbulk[i] ,r.z=rbulk[i]*5.5
 }
 
-
+function fabs(a){ return a>0?a:-a }
 
 var resreturn=[
 {
@@ -342,41 +341,123 @@ var boolclause= [
 
 
 /// for array cloning 
-var testarlen=1500
-var TESTAR=Fdrandom.bulk( testarlen,function(){ return Fdrandom.f48()*1000 } )
+var testarlen=300
+var TESTAR=Fdrandom.bulk( testarlen,function(){ return Fdrandom.range(-1000,1000) } )
+//~ var TESTAR=Fdrandom.bulk( testarlen,function(){ return Fdrandom.mixof("abcdefghij","",Fdrandom.irange(0,9)) } )
+
+var mathabs =[
+ { desc:"math.abs"
+   ,code:"r+=Math.abs(TESTAR[i])"
+   ,func:function (){
+      var r=0; //fg.length=TESTAR.length
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        r+=Math.abs(i)
+      }
+      
+      return r
+    }
+  } 
+  ,
+  { desc:"fabs"
+   ,code:"r+=ffabs(TESTAR[i])"
+   ,func:function (){
+      var r=0; //fg.length=TESTAR.length
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        r+=fabs(i)
+      }
+      
+      return r
+    }
+  } 
+  ,
+  { desc:"simp"
+   ,code:"r+=TESTAR[i]"
+   ,func:function (){
+      var r=0; //fg.length=TESTAR.length
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        r+=i
+      }
+      
+      return r
+    }
+  }
+]
 
 var arrayclone =[
-  { desc:"clone array"
-   ,code:"array.slice()"
+  //~ { desc:"clone array"
+   //~ ,code:"array.slice()"
+   //~ ,func:function (){
+     //~ var r=2.5,fg=TESTAR.slice()
+     //~ for(var i=0;i<100;i+=25)
+     //~ { r+=fg[i] }
+     //~ return r	
+   //~ }
+  //~ }
+ //~ ,{ desc:"clone array"
+   //~ ,code:"array.map(..)"
+   //~ ,func:function (){
+     //~ var r=2.5,fg=TESTAR.map(function(x){ return x })
+     //~ for(var i=0;i<100;i+=25)
+     //~ { r+=fg[i] }
+     //~ return r	
+   //~ }
+  //~ }
+ //~ ,
+ { desc:"clone array pre-len"
+   ,code:"fg[i]=TESTAR[i]"
    ,func:function (){
-     var r=2.5,fg=TESTAR.slice()
-     for(var i=0;i<100;i+=5)
-     { r+=fg[i] }
-     return r	
-   }
+      var r=2.5,fg=new Array(TESTAR.length); //fg.length=TESTAR.length
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        fg[i]=TESTAR[i]
+      }
+      
+      //for(var i=0;i<100;i+=25)
+      //{ r+=fg[i] }	
+      return r
+    }
   }
+
  ,{ desc:"clone array"
-   ,code:"array.map(..)"
-   ,func:function (){
-     var r=2.5,fg=TESTAR.map(function(x){ return x })
-     for(var i=0;i<100;i+=5)
-     { r+=fg[i] }
-     return r	
-   }
-  }
- ,{ desc:"clone array"
-   ,code:"for(i... (copy)"
+   ,code:"fg[i]=TESTAR[i]"
    ,func:function (){
       var r=2.5,fg=[]
       for(var i=0,e=TESTAR.length;i<e;i++){
         fg[i]=TESTAR[i]
       }
       
-      for(var i=0;i<100;i+=5)
-      { r+=fg[i] }	
+      //for(var i=0;i<100;i+=25)
+      //{ r+=fg[i] }	
       return r
     }
   }
+  
+ ,{ desc:"clone array push"
+   ,code:"fg.push(TESTAR[i])"
+   ,func:function (){
+      var r=2.5,fg=new Array(TESTAR.length)//; fg.length=0
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        fg.push(TESTAR[i])
+      }
+      
+      //for(var i=0;i<100;i+=25)
+      //{ r+=fg[i] }	
+      return r
+    }
+  }
+ ,{ desc:"clone array push xx"
+   ,code:"fg.push(TESTAR[i])"
+   ,func:function (){
+      var r=2.5,fg=new Array(TESTAR.length); fg.length=0
+      for(var i=0,e=TESTAR.length;i<e;i++){
+        fg.push(TESTAR[i])
+      }
+      
+      //for(var i=0;i<100;i+=25)
+      //{ r+=fg[i] }	
+      return r
+    }
+  }
+  
 ]
 
 
@@ -427,9 +508,10 @@ var testlist=[
  //~ ,{rc:boolclause ,ds:"bool or 01 clause"}
  //~ ,{rc:resreturn  ,ds:"result passing"}
  //~ ,{rc:moduluses  ,ds:"modulus functions"}
- ,{rc:divideby2  ,ds:"divide by two"}
+ //~ ,{rc:divideby2  ,ds:"divide by two"}
  //~ ,{rc:rounding   ,ds:"rounding"}
  //~ ,{rc:arrayclone ,ds:"array clone"}
+ ,{rc:mathabs ,ds:"mathabs"}
  //~ ,{rc:forinfor   ,ds:"for in ;;;"}
  
 ]
