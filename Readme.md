@@ -1,26 +1,4 @@
 # jsmillibench
-javascript ops benchmarked
+A messy test range
 
-
-The following is true for float data and even variable 
-length random string data:
-
-Allocating arrays with A=new Array(len) is much faster than
-growing arrays wih A=[], about 200 to 300% faster so preallocate.
-
-Doing A=[]; A.length=len, does not work
-If push is desirable A=new Array(len);A.length=0  ....A.push(..
-is possible but not as fast as straight cloning
-setting custom length on array may slow down accesses.
-
-Also,a float array can be cloned into `A=new Array(len)` almost twice
-as quickly as an unallocated `A=[]`
-This is true whether the array is 10 or 10k long.
-
-Conclude that preallocating length is taken seriously
-by javascript engines and can result in a contiguous array
-which is faster to read and write.
-
-Ao[x]=Ai[x] is about 20% faster than Ao.push[Ai[x]]
-for extending arrays.
 

@@ -3,11 +3,11 @@
 
 
 if(typeof performance!=='undefined')
-{ timing=perflast } 
+{ curtime=perflast } 
 else if(typeof process!=='undefined')	
-{ timing=proclast }
+{ curtime=proclast }
 else
-{ timing=datelast }
+{ curtime=datelast }
 
 
 function perflast(btime){ return performance.now()-(btime||0) }
@@ -29,7 +29,7 @@ pr = function() {
 
 bench = function (mthd, bentime, mthd_legend, mthd_arg) {
   
-  function scac(o){
+  function vfmt(o){
     if(o>1000){ return (o/1000).toFixed(4)+" M" }
     else if(o>1) { return o.toFixed(4)+" K" } 
     return (o*1000).toFixed(4)+"  "
@@ -40,36 +40,36 @@ bench = function (mthd, bentime, mthd_legend, mthd_arg) {
   
   bentime=bentime*1000
   
-  var mockres=0, tallyret=0, tallyfrq=0
+  var mockres=0, rslt_sum=0, reps_sum2=0
   var rrets
   var qqtlen=1
   if(typeof mthd_arg !== 'undefined'){ qqtlen=1 }
   
   var maxret=-Infinity ,minret=Infinity
   
-  var tfirst=timing()
-  var atm=ctm=dtm=timing(tfirst)
+  var atime=curtime()
+  var atm=ctime=dtm=curtime(atime)
     
-  var nreps=0.5, treps=0
+  var duereps=0.5, reps_sum=0 //duereps is fudged ?
   
-  while(ctm<50){
-    treps+=(nreps*=2)
+  while(ctime<50){
+    reps_sum+=(duereps*=2)
     if(typeof mthd_arg !== 'undefined'){
-      for(i=0;i<nreps;i++)	{ tallyret+=mthd(mthd_arg) } 
+      for(i=0;i<duereps;i++)	{ rslt_sum+=mthd(mthd_arg) } 
     }else{
-      for(i=0;i<nreps;i++)	{ tallyret+=mthd() }
+      for(i=0;i<duereps;i++)	{ rslt_sum+=mthd() }
     }
-    ctm=timing(tfirst)
+    ctime=curtime(atime)
   }
     
-  tallyfrq=treps
+  reps_sum2=reps_sum
   
-  var roughtmrep=ctm/treps
-  var duereps=Math.floor(bentime/roughtmrep)
+  var reptime=ctime/reps_sum
+  var duereps=Math.floor(bentime/reptime)
   if(duereps<2){ 
-    console.log(mthd_legend+" "+scac(treps/ctm)+"func/s "+
-      "  avg : "+tallyret/tallyfrq)
-    return treps/ctm
+    console.log(mthd_legend+" "+vfmt(reps_sum/ctime)+"func/s "+
+      "  avg : "+rslt_sum/reps_sum2)
+    return reps_sum/ctime
   }
   
   var batches=Math.floor(Math.log(duereps)+0.5)
@@ -82,37 +82,37 @@ bench = function (mthd, bentime, mthd_legend, mthd_arg) {
     if(typeof mthd_arg !== 'undefined')
     { for(var i=0; i<batchreps; i++)	
       { var r=mthd(mthd_arg)
-        tallyret+=r
+        rslt_sum+=r
         if (r>maxret){ maxret=r}
         else{ if (r<minret){ minret=r } }
       }	
     }else{
       for(i=0;i<batchreps;i++)	
       { var r=mthd(mthd_arg) 
-        tallyret+=r
+        rslt_sum+=r
         if (r>maxret){ maxret=r }
         else{ if (r<minret){ minret=r } }
       }
     }
-    tallyfrq+=batchreps
+    reps_sum2+=batchreps
     batches--
   }
   
   var mopsigma=0,mopsfrq=0, bults=[]
-  while(timing(tfirst)<bentime){
-    var tstart=timing()
+  while(curtime(atime)<bentime){
+    var tstart=curtime()
     
     if(typeof mthd_arg !== 'undefined'){
-      for(i=0;i<batchreps;i++)	{ tallyret+=mthd(mthd_arg) } 
+      for(i=0;i<batchreps;i++)	{ rslt_sum+=mthd(mthd_arg) } 
     }else{
-      for(i=0;i<batchreps;i++)	{ tallyret+=mthd() }
+      for(i=0;i<batchreps;i++)	{ rslt_sum+=mthd() }
     }
 
-    var mops=batchreps/timing(tstart)
+    var mops=batchreps/curtime(tstart)
     bults.push(mops)
     mopsigma+=mops*mops
     mopsfrq++
-    tallyfrq+=batchreps
+    reps_sum2+=batchreps
   }
     
   var eb=bults.length
@@ -123,14 +123,14 @@ bench = function (mthd, bentime, mthd_legend, mthd_arg) {
       sume+=bults[i]*bults[i]
     }
     rrets=Math.sqrt(sume/((eb-edge*2-1)))
-    ops=scac(rrets)
+    ops=vfmt(rrets)
   }else{
     var rms=Math.sqrt(mopsigma/mopsfrq);rrets=rms
-    ops=scac(rms)
+    ops=vfmt(rms)
   }
   
   console.log(mthd_legend+" "+ops+"func/s "+
-    "  avg : "+tallyret/tallyfrq)
+    "  avg : "+rslt_sum/reps_sum2)
   
   return rrets*1000
 }
@@ -145,111 +145,6 @@ benchn = function(n,a,b,c,d){
   }
   
   for(var i=0;i<n;i++) { bench(a,b,c,d);} 
-}
-
-
-function fnl(num, length) {
-  var r = "" + num;
-  while (r.length < length) {
-      r = " " + r;
-  }
-  return r;
-}
-
-distrib =function(f,rs, ai,ei, n, a,b,c) //func rs  st fn divs
-{
-  var dv=(ei-ai)/rs
-  
-  var dist=[]
-  for(var i=0;i<rs;i++) { dist[i]=0; }
-  
-  for(var i=0; i<n; i++)
-  {
-    var p=f(a,b,c)-ai
-    dist[Math.floor(p/dv)]++
-  }
-
-  var ot="",oh=""
-  for(var i=0; i<rs; i++)
-  { 
-    oh+=fnl(((ai+dv*(i+0.5))*100/dv).toFixed(2),9)
-    ot+=fnl((dist[i]*100/n).toFixed(4),9) }
-  
-  var lv=0,hv=0
-  for(var i=0; i<((rs-1)/2); i++)
-  {
-    lv+=dist[i]; hv+=dist[rs-1-i]
-  }
-  console.log(oh)
-  console.log(ot)
-  console.log((lv*100/n).toFixed(7),(hv*100/n).toFixed(7),((lv-hv)*100/n).toFixed(7))
-
-}
-
-if (typeof require !=="undefined") var filestreams = require('fs'); //nodejs
-savedata =function(fname,fn,n)
-{
-  var resu = new Uint32Array(n)
-  var k,q=0
-
-  for(i=0;i<n;i++) 
-  { k=fn()
-    resu[i]=k
-    q+=k }
-
-  var ws = filestreams.createWriteStream(fname);
-  var b=new Buffer(resu)
-  a=ws.write(b);
-  ws.end();
-  pr(fname+" saved",a/1024,"Kb")
-  pr("Mean val was "+q/n)
-}
-
-savedata2 =function(fname,fn,fn2,n)
-{
-  var resu = new Uint32Array(n)
-  var k,q=0
-
-  for(i=0;i<n;) 
-  { 
-    k=(fn()-fn2())>>>0
-    resu[i++]=k
-    //~ k=fn2()
-    //~ resu[i++]=k
-    q+=k }
-
-  var ws = filestreams.createWriteStream(fname);
-  var b=new Buffer(resu)
-  a=ws.write(b);
-  ws.end();
-  pr(fname+" saved",a/1024,"Kb")
-  pr("Mean val was "+q/n)
-}
-
-
-function heredoc (f) {
-    return f.toString().match(/\/\*\s*([\s\S]*?)\s*\*\//m)[1];
-};
-
-
-cmd_exec= function(cmd, args, cb_stdout, cb_end) {
-  var spawn = require('child_process').spawn,
-    child = spawn(cmd, args),
-    me = this;
-  me.exit = 0;  // Send a cb to set 1 when cmd exits
-  child.stdout.on('data', function (data) { cb_stdout(me, data) });
-  child.stdout.on('end', function () { cb_end(me) });
-}
-
-
-
-
-var As,Ai
-regurg= function(A)
-{
-  if(As==null||A!=null){ As=A; Ai=0; return NaN}
-  if(As!=null&&Ai==As.length){ Ai=0; }
-  return As[Ai++]
 }
 
 
@@ -315,16 +210,3 @@ warmupset = [
 }
 ]
 
-
-//browsers sees all these from another file
-function scopetest1(){
-  console.log("scopetest seen")
-}
-
-var scopetest2 =function(){
-  console.log("scopetest2 seen")
-}
-
-scopetest3 =function(){  //node sees only this 
-  console.log("scopetest3 seen")
-}

@@ -1,69 +1,23 @@
+//testing and checking binary search to nearest floor value 
+//'floorix' (sic) floor index of array value that is floor of input
 
 if(typeof window ==='undefined'){
   require ('./dlib/mutil.js')
   //~ require ('O:/hub/lead/trigfills/dlib/mutil.js')
   Fdrandom=require ('./dlib/Fdrandom.js')
 }
+
+//src was complicated..
+//seems floorix was selected and stress tested
+//used in helpers.js fancy
  
- 
-var warmup = [
-
-{
- desc:"squareroot"
-,code:"Math.sqrt(i)"
-,func:function sqrts(){
-  var r=2
-  for(var i=0.5;i<500;i++)
-  { r+=Math.sqrt(i) }	
-  return r
-}
-},{ desc:"fastest dummy test"
- ,code:"r+=i"
- ,func:function (){
-    var r=2.5
-    for(var i=0.5;i<500;i++)
-    { r+=i }
-    return r
-  }
-}
-]
-
-
-///test for in
-
-function smfloorixo(A,v){
-    
-  if( v<A[0] ){ 
-    //~ console.log("x",-1,v,A[0])
-    return -1
-  }
-  
-  var c=A.length-1
-
-  while( !(v>=A[c]) ){ c-- }
-  
-  //~ if(v<A[c]||v>A[c+1]){
-    //~ console.log("!!!!!!! x",c,v,A[c-1],A[c],A[c+1])
-  //~ }
-  return c
-}
-
-
 function floorixdef(A,v){  //small arrays floorex
                           //faster until around n>30
   var c=A.length-1
   while( !( v>=A[c] || c===-1) ){ c-- }
   return c
 }
-
-/// rangesearch 
-/// searange 
-/// findpartit 
-/// partitix 
-/// partitnix 
  
-var aa=8,bb=9  ,cc=21
-
 function floorix(A,v,b){  //small arrays floorex
                           //faster until around n>30
   var c=A.length-1
@@ -94,6 +48,24 @@ function floorix(A,v,b){  //small arrays floorex
 
 }
 
+
+
+function smfloorixo(A,v){
+    
+  if( v<A[0] ){ 
+    //~ console.log("x",-1,v,A[0])
+    return -1
+  }
+  
+  var c=A.length-1
+
+  while( !(v>=A[c]) ){ c-- }
+  
+  //~ if(v<A[c]||v>A[c+1]){
+    //~ console.log("!!!!!!! x",c,v,A[c-1],A[c],A[c+1])
+  //~ }
+  return c
+}
 
 function floorex(A,v,b){ 
   
@@ -132,7 +104,10 @@ function floorex(A,v,b){
   return en 
 }
 
+
 //8 21 38
+
+var aa=8,bb=9  ,cc=21
 
 var Ara= Fdrandom.bulk(4 ,Fdrandom.range ,0 ,1000/4) //
 var Arb= Fdrandom.bulk(8 ,Fdrandom.range ,0 ,1000/8) //
@@ -144,9 +119,10 @@ var Arc= Fdrandom.bulk(cc ,Fdrandom.range ,0 ,1000/cc) //
 
 for(var n=Ara.length,c=1;c<n;c++){ Ara[c]=Ara[c]+Ara[c-1] }
 for(var n=Arb.length,c=1;c<n;c++){ Arb[c]=Arb[c]+Arb[c-1] }
+for(var n=Arc.length,c=1;c<n;c++){ Arc[c]=Arc[c]+Arc[c-1] }
 
 
-if(false){ //dissolve array
+if(false){ //put undefineds in array
   for(var n=Arb.length,c=0;c<4;c++){ 
      Arb[n]=undefined
   }
@@ -157,11 +133,8 @@ if(false){ //dissolve array
 }
 
 
-for(var n=Arc.length,c=1;c<n;c++){ Arc[c]=Arc[c]+Arc[c-1] }
-
-
 var vmax = Arb[ Arb.length-1 ]
-var cans= Fdrandom.bulk(400 ,Fdrandom.range ,0 ,vmax*1.1)
+var cans = Fdrandom.bulk(400 ,Fdrandom.range ,0 ,vmax*1.1)
 
 var zztestres=0
 
@@ -326,26 +299,10 @@ var binsearch = [
 ]
 
 
-function dotests(testix,tim){
-  
-  tim=tim||1
-  
-  for(tt of testix){
-    console.log()
-    console.log("Testing:",tt.ds)
-    
-    for(trc of tt.rc){
-      console.log("  Code:",trc.code)
-      bench(trc.func, tim, "   "+trc.desc, 0)
-      bench(trc.func, tim, "   "+trc.desc, 0)
-      bench(trc.func, tim, "   "+trc.desc, 0)
-    }
-  }
-}
-
 var testlist=[
-  //~ {rc:warmup     ,ds:"warmup benchmarks"} ,
+ {rc:warmupset   ,ds:"warmup benchmarks"} ,
  {rc:binsearch   ,ds:"binsearch"}
 ]
+
 var testlenseconds=1
 dotests(testlist, testlenseconds )

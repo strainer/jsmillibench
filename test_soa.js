@@ -190,7 +190,7 @@ function dotests(testix,tim){
 
 var testlist=[
 
- {rc:warmup     ,ds:"warmup benchmarks"} ,
+ {rc:warmup   ,ds:"warmup benchmarks"} ,
  {rc:soaaos   ,ds:"soaaos"} 
  //firefox 50 aos 80% faster than soa
  //v8 2015 aos 40% slower than soa
